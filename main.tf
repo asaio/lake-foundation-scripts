@@ -13,35 +13,14 @@ resource "aws_iam_role" "lambda_role" {
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
 }
 
+data "template_file" "iam_policy_template" {
+  template = file("${path.module}/iam_policy.tpl")  # Adjust the path as needed
+}
+
 resource "aws_iam_policy" "lambda_policy" {
   name        = "lambda_policy"
   description = "Policy for Lambda function"
-  
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Action   = ["ssm:GetParameter"],
-        Effect   = "Allow",
-        Resource = aws_ssm_parameter.example_parameter.arn
-      },
-      {
-        Action   = ["s3:PutLifecycleConfiguration", "s3:PutBucketVersioning"],
-        Effect   = "Allow",
-        Resource = aws_s3_bucket.example_bucket.arn
-      },
-      {
-        Action   = ["kms:Encrypt", "kms:Decrypt"],
-        Effect   = "Allow",
-        Resource = aws_kms_key.example_key.arn  # Replace with your KMS key ARN
-      },
-      {
-        Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
-        Effect   = "Allow",
-        Resource = aws_cloudwatch_log_group.lambda_log_group.arn
-      }
-    ]
-  })
+  policy      = data.template_file.iam_policy_template.rendered
 }
 
 resource "aws_lambda_permission" "eventbridge_permission" {
