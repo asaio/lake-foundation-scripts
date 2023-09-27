@@ -1,7 +1,8 @@
 class VersioningController:
     def __init__(self, s3_adapter, ssm_adapter):
         # Instantiate the UpdateVersioningUseCase with the dependencies
-        self.update_versioning_use_case = , ssm_adapter)
+        self.s3_adapter = s3_adapter
+        self.ssm_adapter = ssm_adapter
 
     def validate_event(self, event):
         # Check if the event contains "/tag/name"
