@@ -2,7 +2,7 @@ class UpdateVersioningUseCase:
     def __init__(self, object_storage_adapter, parameter_store_adapter, versioning_history):
         self.object_storage_adapter = object_storage_adapter
         self.parameter_store_adapter = parameter_store_adapter
-        self.versioning_history = versioning_history
+        self.versioning_history = VersioningHistory()
 
     def _validate_update_is_required(self, bucket_name):
         # Get the current versioning configuration from the object storage adapter
