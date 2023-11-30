@@ -1,0 +1,39 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": "*",
+            "NotAction": "s3:DeleteObjectVersion"
+        }
+    ]
+}
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::YOUR_ACCOUNT_ID:role/ps_consumer"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:DeleteObject",
+            "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*",
+            "Condition": {
+                "StringEquals": {
+                    "s3:version-id": "null"
+                }
+            }
+        }
+    ]
+}
