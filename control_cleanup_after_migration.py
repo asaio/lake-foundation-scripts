@@ -6,11 +6,11 @@ def lambda_handler(event, context):
     lakeformation = boto3.client('lakeformation')
     glue = boto3.client('glue')
     
-    # Dictionary of account IDs (principals) and their corresponding database names
-    account_db_dict = {
-        "123456789012": ["account1_database1", "account1_database2", "account1_database3"],
-        "234567890123": ["account2_database1", "account2_database2", "account2_database3"],
-        "345678901234": ["account3_database1", "account3_database2", "account3_database3"]
+    # Dictionary of account IDs and their corresponding account names
+    account_dict = {
+        "123456789012": "account1",
+        "234567890123": "account2",
+        "345678901234": "account3"
     }
     
     # List of permissions to revoke
@@ -24,7 +24,10 @@ def lambda_handler(event, context):
     # Results dictionary to store API responses
     results = {}
     
-    for account_id, database_names in account_db_dict.items():
+    for account_id, account_name in account_dict.items():
+        # Generate database names for each account
+        database_names = [f"{account_name}_{suffix}" for suffix in ["bronze", "silver", "gold"]]
+        
         results[account_id] = {
             'revoke': {},
             'delete_db': {}
