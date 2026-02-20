@@ -1,5 +1,5 @@
 <mxfile host="app.diagrams.net">
-  <diagram id="awsDriftDetection" name="AWS Drift Detection Architecture">
+  <diagram id="awsDriftDetection" name="AWS Drift Detection">
     <mxGraphModel dx="1420" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -11,12 +11,12 @@
         </mxCell>
 
         <!-- Outbound SNS -->
-        <mxCell id="outboundSNS" value="Outbound SNS Topic" style="ellipse;shape=ellipse;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="masterAccount">
+        <mxCell id="outboundSNS" value="Outbound SNS Topic" style="ellipse;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="masterAccount">
           <mxGeometry x="40" y="60" width="120" height="60" as="geometry" />
         </mxCell>
 
         <!-- Inbound SNS -->
-        <mxCell id="inboundSNS" value="Inbound SNS Topic" style="ellipse;shape=ellipse;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="masterAccount">
+        <mxCell id="inboundSNS" value="Inbound SNS Topic" style="ellipse;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="masterAccount">
           <mxGeometry x="40" y="160" width="120" height="60" as="geometry" />
         </mxCell>
 
@@ -37,3 +37,53 @@
 
         <!-- Step Functions -->
         <mxCell id="stepFunctions" value="Step Functions State Machine" style="shape=rectangle;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="childAccount">
+          <mxGeometry x="40" y="140" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- CodeBuild -->
+        <mxCell id="codeBuild" value="CodeBuild (terraform plan)" style="shape=rectangle;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="childAccount">
+          <mxGeometry x="40" y="220" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Lambda -->
+        <mxCell id="lambda" value="Lambda (Lake Formation checks)" style="shape=rectangle;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="childAccount">
+          <mxGeometry x="40" y="300" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- SNS Publish -->
+        <mxCell id="snsPublish" value="Publish Results to Inbound SNS" style="shape=rectangle;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="childAccount">
+          <mxGeometry x="40" y="380" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Connections -->
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="outboundSNS" target="sqsQueue">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="sqsQueue" target="stepFunctions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="stepFunctions" target="codeBuild">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge4" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="codeBuild" target="lambda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge5" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="lambda" target="snsPublish">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="snsPublish" target="inboundSNS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge7" style="edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="inboundSNS" target="opsTeam">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Cost Estimate -->
+        <mxCell id="costs" value="Cost per execution (per account):&#xa;Step Functions: $0.00025&#xa;Lambda (256MB, 15min): $0.00375&#xa;CodeBuild (5min small): $0.025&#xa;SQS/SNS: negligible&#xa;Total ≈ $0.029" style="shape=note;fillColor=#ffffcc;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="850" y="60" width="250" height="180" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
