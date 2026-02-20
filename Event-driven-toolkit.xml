@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="awsDriftDetection" name="AWS Drift Detection Architecture">
+    <mxGraphModel dx="1420" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Master Account -->
+        <mxCell id="masterAccount" value="Master Account" style="shape=swimlane;childLayout=stackLayout;horizontal=1;resizeParent=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="300" height="300" as="geometry" />
+        </mxCell>
+
+        <!-- Outbound SNS -->
+        <mxCell id="outboundSNS" value="Outbound SNS Topic" style="ellipse;shape=ellipse;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="masterAccount">
+          <mxGeometry x="40" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Inbound SNS -->
+        <mxCell id="inboundSNS" value="Inbound SNS Topic" style="ellipse;shape=ellipse;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="masterAccount">
+          <mxGeometry x="40" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Ops Team -->
+        <mxCell id="opsTeam" value="Ops Team Notifications" style="shape=rectangle;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="masterAccount">
+          <mxGeometry x="180" y="160" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Child Account -->
+        <mxCell id="childAccount" value="Child Account" style="shape=swimlane;childLayout=stackLayout;horizontal=1;resizeParent=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="400" height="400" as="geometry" />
+        </mxCell>
+
+        <!-- SQS Queue -->
+        <mxCell id="sqsQueue" value="SQS Queue (Subscribed to Outbound SNS)" style="shape=rectangle;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="childAccount">
+          <mxGeometry x="40" y="60" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Step Functions -->
+        <mxCell id="stepFunctions" value="Step Functions State Machine" style="shape=rectangle;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="childAccount">
