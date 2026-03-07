@@ -1,37 +1,20 @@
 {
-  "Comment": "Retrieve Glue session logs for federated user with CloudTrail validation",
-  "StartAt": "LookupCallerInCloudTrail",
+  "Comment": "Retrieve Glue session logs securely for federated user",
+  "StartAt": "GetCallerFromCloudTrail",
   "States": {
-    "LookupCallerInCloudTrail": {
+    "GetCallerFromCloudTrail": {
       "Type": "Task",
-      "Resource": "arn:aws:states:::aws-sdk:cloudtrail:lookupEvents",
+      "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
-        "LookupAttributes": [
-          {
-            "AttributeKey": "EventName",
-            "AttributeValue": "StartExecution"
-          }
-        ],
-        "MaxResults": 10
-      },
-      "ResultPath": "$.cloudtrail",
-      "Next": "ValidateExecutionEvent"
-    },
-    "ValidateExecutionEvent": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.cloudtrail.Events[?requestParameters.name == $$.Execution.Name].userIdentity.arn",
-          "IsPresent": true,
-          "Next": "DistributedMapSessions"
+        "FunctionName": "GetCallerFromCloudTrail",
+        "Payload": {
+          "executionArn.$": "$$.Execution.Id",
+          "executionName.$": "$$.Execution.Name",
+          "stateMachineArn.$": "$$.StateMachine.Id"
         }
-      ],
-      "Default": "FailNoCaller"
-    },
-    "FailNoCaller": {
-      "Type": "Fail",
-      "Error": "CallerNotFound",
-      "Cause": "No matching CloudTrail StartExecution event found for this execution."
+      },
+      "ResultPath": "$.caller",
+      "Next": "DistributedMapSessions"
     },
     "DistributedMapSessions": {
       "Type": "Map",
@@ -55,7 +38,7 @@
             "Choices": [
               {
                 "Variable": "tags.Tags.owner",
-                "StringEqualsPath": "cloudtrail.Events[?requestParameters.name == $$.Execution.Name].userIdentity.arn",
+                "StringEqualsPath": "caller.userArn",
                 "Next": "FetchLogStreams"
               }
             ],
@@ -96,7 +79,7 @@
                   "Resource": "arn:aws:states:::aws-sdk:s3:putObject",
                   "Parameters": {
                     "Bucket": "my-glue-session-logs",
-                    "Key.$": "States.Format('{}/{}-{}.json', cloudtrail.Events[?requestParameters.name == $$.Execution.Name].userIdentity.arn, sessionId, logStreamName)",
+                    "Key.$": "States.Format('{}/{}-{}.json', caller.userArn, sessionId, logStreamName)",
                     "Body.$": "events"
                   },
                   "End": true
