@@ -1,0 +1,95 @@
+{
+  "Comment": "Retrieve Glue session logs for federated user",
+  "StartAt": "GetCallerIdentity",
+  "States": {
+    "GetCallerIdentity": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:sts:getCallerIdentity",
+      "Next": "DistributedMapSessions"
+    },
+    "DistributedMapSessions": {
+      "Type": "Map",
+      "ItemProcessor": {
+        "ProcessorConfig": {
+          "Mode": "Distributed"
+        },
+        "StartAt": "GetSessionTags",
+        "States": {
+          "GetSessionTags": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::aws-sdk:glue:getTags",
+            "Parameters": {
+              "ResourceArn.$": "States.Format('arn:aws:glue:{region}:{accountId}:session/{}', $.sessionId)"
+            },
+            "Next": "CheckOwnerTag"
+          },
+          "CheckOwnerTag": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.Tags.owner",
+                "StringEqualsPath": "$.GetCallerIdentity.Arn",
+                "Next": "FetchLogStreams"
+              }
+            ],
+            "Default": "SkipSession"
+          },
+          "FetchLogStreams": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::aws-sdk:logs:describeLogStreams",
+            "Parameters": {
+              "LogGroupName": "/aws-glue/sessions",
+              "LogStreamNamePrefix.$": "$.sessionId"
+            },
+            "Next": "DistributedMapLogStreams"
+          },
+          "DistributedMapLogStreams": {
+            "Type": "Map",
+            "ItemProcessor": {
+              "ProcessorConfig": {
+                "Mode": "Distributed"
+              },
+              "StartAt": "FetchLogs",
+              "States": {
+                "FetchLogs": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:states:::aws-sdk:logs:filterLogEvents",
+                  "Parameters": {
+                    "LogGroupName": "/aws-glue/sessions",
+                    "LogStreamNames": [
+                      {
+                        "States.Format": "$.logStreamName"
+                      }
+                    ]
+                  },
+                  "Next": "WriteToS3"
+                },
+                "WriteToS3": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:states:::aws-sdk:s3:putObject",
+                  "Parameters": {
+                    "Bucket": "my-glue-session-logs",
+                    "Key.$": "States.Format('{}/{}-{}.json', $.GetCallerIdentity.Arn, $.sessionId, $.logStreamName)",
+                    "Body.$": "$.events"
+                  },
+                  "End": true
+                }
+              }
+            },
+            "ItemsPath": "$.logStreams[*].logStreamName",
+            "MaxConcurrency": 20,
+            "End": true
+          },
+          "SkipSession": {
+            "Type": "Pass",
+            "Result": "Skipped - not owner",
+            "End": true
+          }
+        }
+      },
+      "ItemsPath": "$.sessionIds",
+      "MaxConcurrency": 10,
+      "End": true
+    }
+  }
+}
