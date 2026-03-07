@@ -1,11 +1,37 @@
 {
-  "Comment": "Retrieve Glue session logs for federated user",
-  "StartAt": "GetCallerIdentity",
+  "Comment": "Retrieve Glue session logs for federated user with CloudTrail validation",
+  "StartAt": "LookupCallerInCloudTrail",
   "States": {
-    "GetCallerIdentity": {
+    "LookupCallerInCloudTrail": {
       "Type": "Task",
-      "Resource": "arn:aws:states:::aws-sdk:sts:getCallerIdentity",
-      "Next": "DistributedMapSessions"
+      "Resource": "arn:aws:states:::aws-sdk:cloudtrail:lookupEvents",
+      "Parameters": {
+        "LookupAttributes": [
+          {
+            "AttributeKey": "EventName",
+            "AttributeValue": "StartExecution"
+          }
+        ],
+        "MaxResults": 10
+      },
+      "ResultPath": "$.cloudtrail",
+      "Next": "ValidateExecutionEvent"
+    },
+    "ValidateExecutionEvent": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.cloudtrail.Events[?requestParameters.name == $$.Execution.Name].userIdentity.arn",
+          "IsPresent": true,
+          "Next": "DistributedMapSessions"
+        }
+      ],
+      "Default": "FailNoCaller"
+    },
+    "FailNoCaller": {
+      "Type": "Fail",
+      "Error": "CallerNotFound",
+      "Cause": "No matching CloudTrail StartExecution event found for this execution."
     },
     "DistributedMapSessions": {
       "Type": "Map",
@@ -19,16 +45,17 @@
             "Type": "Task",
             "Resource": "arn:aws:states:::aws-sdk:glue:getTags",
             "Parameters": {
-              "ResourceArn.$": "States.Format('arn:aws:glue:{region}:{accountId}:session/{}', $.sessionId)"
+              "ResourceArn.$": "States.Format('arn:aws:glue:{region}:{accountId}:session/{}', sessionId)"
             },
+            "ResultPath": "$.tags",
             "Next": "CheckOwnerTag"
           },
           "CheckOwnerTag": {
             "Type": "Choice",
             "Choices": [
               {
-                "Variable": "$.Tags.owner",
-                "StringEqualsPath": "$.GetCallerIdentity.Arn",
+                "Variable": "tags.Tags.owner",
+                "StringEqualsPath": "cloudtrail.Events[?requestParameters.name == $$.Execution.Name].userIdentity.arn",
                 "Next": "FetchLogStreams"
               }
             ],
@@ -39,8 +66,9 @@
             "Resource": "arn:aws:states:::aws-sdk:logs:describeLogStreams",
             "Parameters": {
               "LogGroupName": "/aws-glue/sessions",
-              "LogStreamNamePrefix.$": "$.sessionId"
+              "LogStreamNamePrefix.$": "sessionId"
             },
+            "ResultPath": "$.logStreams",
             "Next": "DistributedMapLogStreams"
           },
           "DistributedMapLogStreams": {
@@ -57,11 +85,10 @@
                   "Parameters": {
                     "LogGroupName": "/aws-glue/sessions",
                     "LogStreamNames": [
-                      {
-                        "States.Format": "$.logStreamName"
-                      }
+                      "logStreamName"
                     ]
                   },
+                  "ResultPath": "$.events",
                   "Next": "WriteToS3"
                 },
                 "WriteToS3": {
@@ -69,14 +96,14 @@
                   "Resource": "arn:aws:states:::aws-sdk:s3:putObject",
                   "Parameters": {
                     "Bucket": "my-glue-session-logs",
-                    "Key.$": "States.Format('{}/{}-{}.json', $.GetCallerIdentity.Arn, $.sessionId, $.logStreamName)",
-                    "Body.$": "$.events"
+                    "Key.$": "States.Format('{}/{}-{}.json', cloudtrail.Events[?requestParameters.name == $$.Execution.Name].userIdentity.arn, sessionId, logStreamName)",
+                    "Body.$": "events"
                   },
                   "End": true
                 }
               }
             },
-            "ItemsPath": "$.logStreams[*].logStreamName",
+            "ItemsPath": "logStreams.logStreams[*].logStreamName",
             "MaxConcurrency": 20,
             "End": true
           },
@@ -87,7 +114,7 @@
           }
         }
       },
-      "ItemsPath": "$.sessionIds",
+      "ItemsPath": "sessionIds",
       "MaxConcurrency": 10,
       "End": true
     }
