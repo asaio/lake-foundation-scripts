@@ -1,170 +1,407 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Plano de Carreira – Coordenação</title>
-  <style>
-    body { margin:0; padding:0; font-family: Arial, sans-serif; background:#fff; color:#000; }
-    .slide {
-      display:none;
-      width:100vw;
-      height:100vh;
-      padding:60px;
-      box-sizing:border-box;
-    }
-    .active { display:flex; flex-direction:column; justify-content:center; }
-    h1, h2 { color:#ff6600; margin-bottom:20px; }
-    ul { margin-top:15px; font-size:20px; }
-    p { font-size:20px; }
-    .nav {
-      position:fixed;
-      bottom:20px;
-      width:100%;
-      text-align:center;
-    }
-    button {
-      padding:12px 24px;
-      margin:0 10px;
-      font-size:18px;
-      background:#ff6600;
-      color:#fff;
-      border:none;
-      border-radius:4px;
-      cursor:pointer;
-    }
-    button:hover { background:#000; color:#ff6600; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Plano de Carreira – Coordenação Lake Foundation</title>
+<style>
+  :root{
+    --orange:#ff6600;
+    --white:#ffffff;
+    --muted:#f6f6f6;
+    --dark:#0b0b0b;
+    --card-radius:14px;
+    --max-width:1200px;
+    --shadow: 0 24px 60px rgba(11,11,11,0.12);
+  }
+
+  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+  body[data-theme="light"]{background:var(--muted);color:#111}
+  body[data-theme="dark"]{background:#070707;color:#eaeaea}
+
+  .deck{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box}
+  .slides{position:relative;width:100%;height:100%}
+  .slide{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%) scale(.98);
+    width:min(var(--max-width),94vw);
+    height:min(860px,90vh);
+    background:var(--white);
+    border-radius:var(--card-radius);
+    box-shadow:var(--shadow);
+    padding:36px;
+    box-sizing:border-box;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .35s ease, transform .45s cubic-bezier(.2,.9,.3,1);
+    display:grid;
+    grid-template-rows:auto 1fr auto;
+    gap:18px;
+    overflow:hidden;
+  }
+  body[data-theme="dark"] .slide{
+    background:linear-gradient(180deg,#0f0f10,#0b0b0b);
+    box-shadow:0 24px 60px rgba(0,0,0,0.6);
+  }
+  .slide.active{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:auto}
+
+  header.slide-header{display:flex;align-items:center;gap:18px}
+  .logo{width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,var(--orange),#ff9a4d);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:20px;box-shadow:0 10px 30px rgba(255,102,0,0.14)}
+  .title{display:flex;flex-direction:column}
+  .title h1{margin:0;font-size:20px;color:var(--orange);letter-spacing:.2px}
+  .title p{margin:4px 0 0 0;font-size:13px;opacity:.95}
+
+  main{display:flex;gap:28px;align-items:flex-start;height:100%}
+  .content{flex:1;min-width:0;overflow:auto;padding-right:6px}
+  .content h2{margin:0 0 12px 0;font-size:28px;color:var(--orange)}
+  .content p{font-size:18px;line-height:1.6;margin:0 0 12px 0;color:inherit}
+  .content ul{padding-left:20px;margin:0 0 12px 0;font-size:18px;line-height:1.6}
+  .content li{margin:8px 0}
+
+  /* SWOT 2x2 grid */
+  .swot-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr 1fr;
+    gap:12px;
+    margin-top:14px;
+    height:320px;
+  }
+  .swot-cell{
+    border-radius:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.92));
+    padding:18px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
+    box-shadow:0 8px 20px rgba(11,11,11,0.06);
+    font-size:18px;
+  }
+  body[data-theme="dark"] .swot-cell{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow:0 8px 20px rgba(0,0,0,0.6);
+  }
+  .swot-letter{
+    font-weight:900;
+    font-size:36px;
+    color:var(--orange);
+    margin-bottom:8px;
+  }
+  .swot-title{font-weight:800;margin-bottom:6px}
+  .swot-desc{font-size:15px;opacity:.95;line-height:1.45}
+
+  aside{width:340px;min-width:220px;background:rgba(0,0,0,0.03);border-radius:10px;padding:18px;box-sizing:border-box;height:100%;overflow:auto}
+  body[data-theme="dark"] aside{background:rgba(255,255,255,0.02)}
+  .aside-title{font-weight:800;color:var(--orange);margin-bottom:8px}
+  .meta{font-size:14px;opacity:.95;margin-bottom:10px}
+
+  footer{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .controls{display:flex;gap:10px;align-items:center}
+  .btn{background:var(--orange);color:var(--white);border:none;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px rgba(255,102,0,0.12)}
+  .btn.ghost{background:transparent;color:inherit;border:1px solid rgba(0,0,0,0.06)}
+  body[data-theme="dark"] .btn.ghost{border:1px solid rgba(255,255,255,0.06)}
+  .btn:disabled{opacity:.45;cursor:default;box-shadow:none}
+
+  .floating{position:fixed;right:18px;top:18px;display:flex;gap:10px;align-items:center;z-index:999}
+  .mini-counter{background:var(--white);padding:8px 12px;border-radius:10px;box-shadow:0 10px 30px rgba(11,11,11,0.08);font-weight:800}
+  body[data-theme="dark"] .mini-counter{background:rgba(255,255,255,0.02);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:8px;z-index:999}
+  .dot{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,0.12);cursor:pointer}
+  .dot.active{background:var(--orange);box-shadow:0 8px 20px rgba(255,102,0,0.14)}
+
+  /* Responsive */
+  @media (max-width:1000px){
+    .slide{width:94vw;height:92vh;padding:20px}
+    aside{display:none}
+    .content h2{font-size:22px}
+    .content p,.content li{font-size:16px}
+    .swot-grid{height:260px}
+  }
+
+  /* Accessibility focus */
+  button:focus{outline:3px solid rgba(255,102,0,0.18);outline-offset:3px}
+</style>
 </head>
-<body>
-
-<div class="slide active">
-  <h1>Plano de Carreira – Coordenação de Pessoas</h1>
-  <h2>Framework STARS – Sustaining Success + Realignment</h2>
-  <p>Manter o sucesso das entregas e realinhar cultura e capacitação para sustentabilidade.</p>
+<body data-theme="light">
+<div class="deck" id="deck" role="application" aria-label="Apresentação Plano de Carreira">
+  <div class="slides" id="slides"></div>
 </div>
 
-<div class="slide">
-  <h2>Contexto</h2>
-  <ul>
-    <li>Histórico de boas entregas</li>
-    <li>Problemas: clima organizacional desgastado, sobrecarga, pouca capacitação</li>
-    <li>Papel do coordenador: equilibrar performance e desenvolvimento humano</li>
-  </ul>
+<div class="floating" role="toolbar" aria-label="Controles">
+  <button id="themeToggle" class="btn ghost" aria-pressed="false">Modo Escuro</button>
+  <div id="miniCounter" class="mini-counter">1 / 11</div>
+  <button id="fullscreenBtn" class="btn ghost" title="Tela cheia">Tela cheia</button>
 </div>
 
-<div class="slide">
-  <h2>Framework STARS</h2>
-  <ul>
-    <li>Sustaining Success: manter resultados consistentes</li>
-    <li>Realignment: corrigir desalinhamentos culturais e estruturais</li>
-    <li>Capacitação no horário de trabalho aumenta accountability e reduz erros</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Diagnóstico</h2>
-  <ul>
-    <li>SWOT da equipe</li>
-    <li>Entrevistas individuais</li>
-    <li>Identificação de riscos de turnover</li>
-    <li>Mapeamento de sobrecarga e processos</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Realignment com Capacitação</h2>
-  <ul>
-    <li>Capacitação dentro da jornada de trabalho</li>
-    <li>Metodologias ativas: peer learning, projetos práticos, simulações</li>
-    <li>Accountability: aprendizado aplicado diretamente em entregas</li>
-    <li>Cultura de aprendizado contínuo</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Plano de Treinamento</h2>
-  <ul>
-    <li>AWS Certified Solutions Architect – infraestrutura cloud</li>
-    <li>Kubernetes Certified Application Developer (CKAD) – desenvolvimento em containers</li>
-    <li>Databricks Certified Administrator – gestão da plataforma de dados</li>
-  </ul>
-  <p><strong>Execução:</strong></p>
-  <ul>
-    <li>Curto prazo: workshops internos, labs práticos</li>
-    <li>Médio prazo: cursos oficiais, preparação para certificações, projetos piloto</li>
-    <li>Longo prazo: certificações concluídas, aplicação em projetos estratégicos</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Conhecer e Desenvolver o Time</h2>
-  <ul>
-    <li>Pesquisa de clima organizacional trimestral</li>
-    <li>Planos de carreira individuais</li>
-    <li>Feedbacks contínuos</li>
-    <li>Colaboração em vez de concorrência</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Planos e Metas Estratégicas</h2>
-  <ul>
-    <li>Alinhamento com planejamento da organização</li>
-    <li>Redistribuição de tarefas para reduzir sobrecarga</li>
-    <li>Metas realistas e sustentáveis</li>
-    <li>Gestão democrática e orgânica</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Acompanhamento de Indicadores</h2>
-  <ul>
-    <li>Produtividade e qualidade</li>
-    <li>Engajamento e satisfação interna</li>
-    <li>Reconhecimento público de conquistas</li>
-    <li>Ciclos PDCA para melhoria contínua</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Roadmap de Carreira</h2>
-  <ul>
-    <li>Curto prazo (0–6 meses): diagnóstico, feedbacks, início da capacitação</li>
-    <li>Médio prazo (6–18 meses): planos de carreira, certificações em andamento, indicadores de clima</li>
-    <li>Longo prazo (18–36 meses): cultura de aprendizado contínuo, certificações concluídas, novos líderes internos</li>
-  </ul>
-</div>
-
-<div class="slide">
-  <h2>Encerramento</h2>
-  <p><em>“Sustentar o sucesso exige cuidar das pessoas e investir em conhecimento.”</em></p>
-  <p>Imagem sugerida: equipe em treinamento colaborativo</p>
-</div>
-
-<div class="nav">
-  <button onclick="prevSlide()">Anterior</button>
-  <button onclick="nextSlide()">Próximo</button>
-</div>
+<div class="dots" id="dots" aria-hidden="false"></div>
 
 <script>
-  let current = 0;
-  const slides = document.querySelectorAll('.slide');
-  function showSlide(index) {
-    slides.forEach((s,i)=> s.classList.toggle('active', i===index));
-  }
-  function nextSlide() {
-    if (current < slides.length-1) current++;
-    showSlide(current);
-  }
-  function prevSlide() {
-    if (current > 0) current--;
-    showSlide(current);
-  }
-  document.addEventListener("keydown", function(e){
-    if(e.key==="ArrowRight") nextSlide();
-    if(e.key==="ArrowLeft") prevSlide();
-  });
-</script>
+(() => {
+  const slidesData = [
+    {
+      title: 'Plano de Carreira – Coordenação de Pessoas',
+      subtitle: 'Framework STARS — Sustaining Success + Realignment',
+      heading: 'Visão geral e referência',
+      paragraphs: [
+        'Este plano orienta a atuação do coordenador para manter a performance da equipe enquanto realinha processos, cultura e capacitação para garantir sustentabilidade.',
+        'Referência: modelo STARS de Michael Watkins. Consulte o autor para aprofundamento: <a href="https://michaelwatkins.com" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">michaelwatkins.com</a>'
+      ]
+    },
+    {
+      title: 'Contexto',
+      subtitle: 'Diagnóstico inicial',
+      heading: 'Situação atual e impacto',
+      paragraphs: [
+        'A equipe entrega resultados consistentes, mas enfrenta desafios decorrentes de um escopo estratégico grande e complexo que exige coordenação, documentação e transferência de conhecimento mais estruturadas.',
+        'O coordenador precisa equilibrar a manutenção da qualidade das entregas com ações que criem espaço para aprendizado, reduzam riscos operacionais e aumentem a resiliência do time.'
+      ]
+    },
+    {
+      title: 'Framework STARS',
+      subtitle: 'Sustaining Success + Realignment',
+      heading: 'Por que este framework',
+      paragraphs: [
+        'Sustaining Success preserva práticas que funcionam e garante continuidade das entregas. Realignment corrige desalinhamentos — culturais, de processos e de capacitação — que ameaçam a sustentabilidade.',
+        'Capacitação durante a jornada é estratégica: aumenta accountability, permite aplicação imediata em tarefas reais e reduz o tempo de transferência de conhecimento.'
+      ]
+    },
+    {
+      title: 'Diagnóstico',
+      subtitle: 'O que mapear',
+      heading: 'Passos e ferramenta SWOT',
+      paragraphs: [
+        'Use uma análise SWOT para organizar evidências e priorizar ações. Abaixo há um quadro 2x2 para uso direto na apresentação: as letras S e W ocupam a primeira linha; O e T a segunda, facilitando preenchimento colaborativo durante a reunião.',
+        'Passos: 1) Análise SWOT detalhada; 2) Entrevistas individuais e reuniões de escuta; 3) Mapeamento de processos operacionais para identificar gargalos e tarefas que podem ser automatizadas ou redistribuídas.'
+      ],
+      swot: true
+    },
+    {
+      title: 'Realignment com Capacitação',
+      subtitle: 'Capacitação como parte da jornada',
+      heading: 'Estratégia prática',
+      paragraphs: [
+        'Implementar tempo protegido para capacitação (ex.: 4 horas por semana por colaborador) formalizado no calendário da equipe. Esse tempo é parte do contrato operacional e não um extra.',
+        'Adotar metodologias ativas: peer learning, projetos práticos com entregáveis reais, simulações de incidentes e microlearning. Cada módulo termina com aplicação prática vinculada a uma entrega real, garantindo accountability.'
+      ]
+    },
+    {
+      title: 'Plano de Treinamento',
+      subtitle: 'Certificações estratégicas',
+      heading: 'Conteúdo e execução',
+      paragraphs: [
+        'Certificações prioritárias: AWS Certified Solutions Architect (infraestrutura e arquitetura cloud), CKAD — Kubernetes Certified Application Developer (desenvolvimento e deployment de aplicações em containers) e Databricks Certified Administrator (administração e governança da plataforma Databricks).',
+        'Fases: curto prazo (0–6m) — workshops internos e labs; médio prazo (6–18m) — cursos oficiais e preparação para provas; longo prazo (18–36m) — certificações concluídas, aplicação em projetos e disseminação do conhecimento internamente.'
+      ]
+    },
+    {
+      title: 'Conhecer e Desenvolver o Time',
+      subtitle: 'Planos individuais e clima',
+      heading: 'Ações de desenvolvimento humano',
+      paragraphs: [
+        'Aplicar pesquisa de clima trimestral e NPS interno para medir evolução. Construir planos de carreira individuais com metas de capacitação, entregas e milestones claros.',
+        'Estabelecer rotina de feedbacks contínuos, reuniões 1:1 e sessões de coaching técnico. Incentivar reconhecimento público de conquistas e promover colaboração em vez de competição.'
+      ]
+    },
+    {
+      title: 'Sustaining Success — Rotação e TechLeads',
+      subtitle: 'Estratégia de manutenção do sucesso',
+      heading: 'Rotação programada de membros e TechLeads',
+      paragraphs: [
+        'Para sustentar conhecimento e garantir continuidade de fundação de dados ao reduzir dependência de indivíduos, implementar rotação planejada de team members e TechLeads em ciclos fixos e combinados. Exemplo: ciclos de 6 meses para TechLeads e 3–6 meses para membros de time em funções críticas.',
+        'Cada rotação é combinada (anunciada com antecedência, com período de overlap para transferência de conhecimento) e inclui checklist de handover, pares de shadowing e tarefas de documentação. Rotação aumenta resiliência, acelera desenvolvimento de liderança e distribui responsabilidade sem perda de qualidade.'
+      ]
+    },
+    {
+      title: 'Planos e Metas Estratégicas',
+      subtitle: 'Alinhamento e priorização',
+      heading: 'Como priorizar sem sobrecarregar',
+      paragraphs: [
+        'Alinhar metas da equipe com o planejamento estratégico da organização. Revisar dimensionamento e redistribuir tarefas para reduzir picos de demanda causados pelo escopo estratégico grande e complexo.',
+        'Definir metas realistas, priorizar iniciativas de maior impacto e adotar governança leve para aprovar mudanças. Usar gestão democrática para envolver o time nas decisões de priorização.'
+      ]
+    },
+    {
+      title: 'Acompanhamento de Indicadores',
+      subtitle: 'Medição e reconhecimento',
+      heading: 'Métricas e ciclos de melhoria',
+      paragraphs: [
+        'Monitorar indicadores de produtividade (velocidade - Leadtime de Histórias e Features, throughput), qualidade (defeitos, retrabalho), SLAs e métricas de engajamento (NPS interno, turnover).',
+        'Reconhecer resultados positivos publicamente e aplicar ciclos PDCA para temas críticos. Revisões mensais e checkpoints trimestrais para avaliar impacto das ações de capacitação e rotação.'
+      ]
+    },
+    {
+      title: 'Roadmap e Encerramento',
+      subtitle: 'Curto, médio e longo prazo',
+      heading: 'Linha do tempo e próximos passos',
+      paragraphs: [
+        'Curto prazo (0–6m): diagnóstico, comunicação do plano, início de workshops e tempo protegido para capacitação; estabelecer métricas base.',
+        'Médio prazo (6–18m): execução de cursos oficiais, pilotos de rotação e preparação para certificações; medir impacto e ajustar.',
+        'Longo prazo (18–36m): certificações concluídas, cultura de aprendizado consolidada, TechLeads rotacionando e novos líderes internos formados.'
+      ]
+    }
+  ];
 
+  const slidesContainer = document.getElementById('slides');
+  const dotsContainer = document.getElementById('dots');
+  const miniCounter = document.getElementById('miniCounter');
+  const total = slidesData.length;
+
+  slidesData.forEach((s, i) => {
+    const sec = document.createElement('section');
+    sec.className = 'slide';
+    sec.setAttribute('data-index', i);
+    sec.setAttribute('aria-hidden', 'true');
+
+    // Header
+    const headerHTML = `
+      <header class="slide-header">
+        <div class="logo">${s.title.split(' ').slice(0,2).map(w=>w[0]).join('')}</div>
+        <div class="title"><h1>${s.title}</h1><p>${s.subtitle}</p></div>
+      </header>
+    `;
+
+    // Paragraphs (allow HTML)
+    const paragraphsHTML = (s.paragraphs || []).map(p => `<p>${p}</p>`).join('');
+
+    // If this slide includes SWOT grid, build it
+    let swotHTML = '';
+    if (s.swot) {
+      swotHTML = `
+        <div class="swot-grid" role="grid" aria-label="Matriz SWOT">
+          <div class="swot-cell" role="gridcell" aria-label="Forças">
+            <div class="swot-letter">S</div>
+            <div class="swot-title">Forças</div>
+            <div class="swot-desc">Liste aqui pontos fortes internos: expertise, processos que funcionam, recursos críticos.</div>
+          </div>
+          <div class="swot-cell" role="gridcell" aria-label="Fraquezas">
+            <div class="swot-letter">W</div>
+            <div class="swot-title">Fraquezas</div>
+            <div class="swot-desc">Liste gaps de conhecimento, dependências e áreas que precisam de melhoria.</div>
+          </div>
+          <div class="swot-cell" role="gridcell" aria-label="Oportunidades">
+            <div class="swot-letter">O</div>
+            <div class="swot-title">Oportunidades</div>
+            <div class="swot-desc">Automação, capacitação, parcerias e iniciativas que podem ampliar impacto.</div>
+          </div>
+          <div class="swot-cell" role="gridcell" aria-label="Ameaças">
+            <div class="swot-letter">T</div>
+            <div class="swot-title">Ameaças</div>
+            <div class="swot-desc">Riscos externos e internos que podem comprometer entregas e continuidade.</div>
+          </div>
+        </div>
+      `;
+    }
+
+    const mainHTML = `
+      <main>
+        <div class="content">
+          <h2>${s.heading}</h2>
+          ${paragraphsHTML}
+          ${swotHTML}
+        </div>
+        <aside>
+          <div class="aside-title">Resumo</div>
+          <div class="meta">${s.subtitle}</div>
+          <div style="font-size:14px;opacity:.95">${(s.paragraphs && s.paragraphs[0] ? s.paragraphs[0].replace(/<[^>]+>/g,'').slice(0,140) : '')}${(s.paragraphs && s.paragraphs[0] && s.paragraphs[0].length>140 ? '…' : '')}</div>
+        </aside>
+      </main>
+    `;
+
+    const footerHTML = `
+      <footer>
+        <div class="controls">
+          <button class="btn" id="prev${i}" aria-label="Anterior">Anterior</button>
+          <button class="btn" id="next${i}" aria-label="Próximo">Próximo</button>
+        </div>
+        <div style="font-weight:800">Slide <span class="slide-index">${i+1}</span> de ${total}</div>
+      </footer>
+    `;
+
+    sec.innerHTML = headerHTML + mainHTML + footerHTML;
+    slidesContainer.appendChild(sec);
+
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('data-index', i);
+    dot.setAttribute('role', 'button');
+    dot.setAttribute('aria-label', 'Ir para slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let current = 0;
+
+  function show(index){
+    if(index < 0 || index >= slides.length) return;
+    slides.forEach((el, i) => {
+      el.classList.toggle('active', i === index);
+      el.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+    });
+    current = index;
+    updateUI();
+  }
+  function next(){ if(current < slides.length - 1) show(current + 1); }
+  function prev(){ if(current > 0) show(current - 1); }
+  function goTo(i){ show(i); }
+
+  function updateUI(){
+    miniCounter.textContent = (current + 1) + ' / ' + total;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    document.querySelectorAll('[id^="prev"]').forEach(btn => btn.disabled = current === 0);
+    document.querySelectorAll('[id^="next"]').forEach(btn => btn.disabled = current === total - 1);
+  }
+
+  slides.forEach((s, i) => {
+    const prevBtn = s.querySelector('#prev' + i);
+    const nextBtn = s.querySelector('#next' + i);
+    if(prevBtn) prevBtn.addEventListener('click', prev);
+    if(nextBtn) nextBtn.addEventListener('click', next);
+  });
+
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  themeToggle.addEventListener('click', () => {
+    const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', theme);
+    themeToggle.textContent = theme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
+    localStorage.setItem('pc_theme', theme);
+  });
+  const saved = localStorage.getItem('pc_theme');
+  if(saved){ document.body.setAttribute('data-theme', saved); themeToggle.textContent = saved === 'dark' ? 'Modo Claro' : 'Modo Escuro'; }
+
+  // Fullscreen
+  document.getElementById('fullscreenBtn').addEventListener('click', () => {
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  });
+
+  // Keyboard and touch navigation
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight' || e.key === 'PageDown') next();
+    if(e.key === 'ArrowLeft' || e.key === 'PageUp') prev();
+    if(e.key === 'Home') goTo(0);
+    if(e.key === 'End') goTo(slides.length - 1);
+  });
+  let startX = 0;
+  document.getElementById('deck').addEventListener('touchstart', e => startX = e.changedTouches[0].screenX, {passive:true});
+  document.getElementById('deck').addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].screenX;
+    if(Math.abs(diff) > 40) diff > 0 ? next() : prev();
+  }, {passive:true});
+
+  // Initialize
+  show(0);
+
+  // Expose API for debugging
+  window.presentation = { next, prev, goTo, slidesCount: slides.length };
+})();
+</script>
 </body>
 </html>
+
