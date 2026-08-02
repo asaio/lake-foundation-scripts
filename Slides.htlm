@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Plano de Carreira – Coordenação</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#fff; color:#000; }
+    .slide { display:none; padding:40px; height:100vh; box-sizing:border-box; }
+    .active { display:block; }
+    h1, h2 { color:#ff6600; } /* Laranja para títulos */
+    ul { margin-top:15px; }
+    .nav { position:fixed; bottom:20px; width:100%; text-align:center; }
+    button { 
+      padding:10px 20px; 
+      margin:0 10px; 
+      font-size:16px; 
+      background:#ff6600; 
+      color:#fff; 
+      border:none; 
+      border-radius:4px; 
+      cursor:pointer; 
+    }
+    button:hover { background:#000; color:#ff6600; }
+    .slide:nth-child(even) { background:#f9f9f9; } /* alternância suave */
+  </style>
+</head>
+<body>
+
+<div class="slide active">
+  <h1>Plano de Carreira – Coordenação de Pessoas</h1>
+  <h2>Framework STARS – Sustaining Success + Realignment</h2>
+  <p>Manter o sucesso das entregas e realinhar cultura e capacitação para sustentabilidade.</p>
+</div>
+
+<div class="slide">
+  <h2>Contexto</h2>
+  <ul>
+    <li>Histórico de boas entregas</li>
+    <li>Problemas: clima organizacional desgastado, sobrecarga, pouca capacitação</li>
+    <li>Papel do coordenador: equilibrar performance e desenvolvimento humano</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Framework STARS</h2>
+  <ul>
+    <li>Sustaining Success: manter resultados consistentes</li>
+    <li>Realignment: corrigir desalinhamentos culturais e estruturais</li>
+    <li>
