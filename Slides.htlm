@@ -4,24 +4,35 @@
   <meta charset="UTF-8">
   <title>Plano de Carreira – Coordenação</title>
   <style>
-    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#fff; color:#000; }
-    .slide { display:none; padding:40px; height:100vh; box-sizing:border-box; }
-    .active { display:block; }
-    h1, h2 { color:#ff6600; } /* Laranja para títulos */
-    ul { margin-top:15px; }
-    .nav { position:fixed; bottom:20px; width:100%; text-align:center; }
-    button { 
-      padding:10px 20px; 
-      margin:0 10px; 
-      font-size:16px; 
-      background:#ff6600; 
-      color:#fff; 
-      border:none; 
-      border-radius:4px; 
-      cursor:pointer; 
+    body { margin:0; padding:0; font-family: Arial, sans-serif; background:#fff; color:#000; }
+    .slide {
+      display:none;
+      width:100vw;
+      height:100vh;
+      padding:60px;
+      box-sizing:border-box;
+    }
+    .active { display:flex; flex-direction:column; justify-content:center; }
+    h1, h2 { color:#ff6600; margin-bottom:20px; }
+    ul { margin-top:15px; font-size:20px; }
+    p { font-size:20px; }
+    .nav {
+      position:fixed;
+      bottom:20px;
+      width:100%;
+      text-align:center;
+    }
+    button {
+      padding:12px 24px;
+      margin:0 10px;
+      font-size:18px;
+      background:#ff6600;
+      color:#fff;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
     }
     button:hover { background:#000; color:#ff6600; }
-    .slide:nth-child(even) { background:#f9f9f9; } /* alternância suave */
   </style>
 </head>
 <body>
@@ -46,4 +57,114 @@
   <ul>
     <li>Sustaining Success: manter resultados consistentes</li>
     <li>Realignment: corrigir desalinhamentos culturais e estruturais</li>
-    <li>
+    <li>Capacitação no horário de trabalho aumenta accountability e reduz erros</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Diagnóstico</h2>
+  <ul>
+    <li>SWOT da equipe</li>
+    <li>Entrevistas individuais</li>
+    <li>Identificação de riscos de turnover</li>
+    <li>Mapeamento de sobrecarga e processos</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Realignment com Capacitação</h2>
+  <ul>
+    <li>Capacitação dentro da jornada de trabalho</li>
+    <li>Metodologias ativas: peer learning, projetos práticos, simulações</li>
+    <li>Accountability: aprendizado aplicado diretamente em entregas</li>
+    <li>Cultura de aprendizado contínuo</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Plano de Treinamento</h2>
+  <ul>
+    <li>AWS Certified Solutions Architect – infraestrutura cloud</li>
+    <li>Kubernetes Certified Application Developer (CKAD) – desenvolvimento em containers</li>
+    <li>Databricks Certified Administrator – gestão da plataforma de dados</li>
+  </ul>
+  <p><strong>Execução:</strong></p>
+  <ul>
+    <li>Curto prazo: workshops internos, labs práticos</li>
+    <li>Médio prazo: cursos oficiais, preparação para certificações, projetos piloto</li>
+    <li>Longo prazo: certificações concluídas, aplicação em projetos estratégicos</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Conhecer e Desenvolver o Time</h2>
+  <ul>
+    <li>Pesquisa de clima organizacional trimestral</li>
+    <li>Planos de carreira individuais</li>
+    <li>Feedbacks contínuos</li>
+    <li>Colaboração em vez de concorrência</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Planos e Metas Estratégicas</h2>
+  <ul>
+    <li>Alinhamento com planejamento da organização</li>
+    <li>Redistribuição de tarefas para reduzir sobrecarga</li>
+    <li>Metas realistas e sustentáveis</li>
+    <li>Gestão democrática e orgânica</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Acompanhamento de Indicadores</h2>
+  <ul>
+    <li>Produtividade e qualidade</li>
+    <li>Engajamento e satisfação interna</li>
+    <li>Reconhecimento público de conquistas</li>
+    <li>Ciclos PDCA para melhoria contínua</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Roadmap de Carreira</h2>
+  <ul>
+    <li>Curto prazo (0–6 meses): diagnóstico, feedbacks, início da capacitação</li>
+    <li>Médio prazo (6–18 meses): planos de carreira, certificações em andamento, indicadores de clima</li>
+    <li>Longo prazo (18–36 meses): cultura de aprendizado contínuo, certificações concluídas, novos líderes internos</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Encerramento</h2>
+  <p><em>“Sustentar o sucesso exige cuidar das pessoas e investir em conhecimento.”</em></p>
+  <p>Imagem sugerida: equipe em treinamento colaborativo</p>
+</div>
+
+<div class="nav">
+  <button onclick="prevSlide()">Anterior</button>
+  <button onclick="nextSlide()">Próximo</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  function showSlide(index) {
+    slides.forEach((s,i)=> s.classList.toggle('active', i===index));
+  }
+  function nextSlide() {
+    if (current < slides.length-1) current++;
+    showSlide(current);
+  }
+  function prevSlide() {
+    if (current > 0) current--;
+    showSlide(current);
+  }
+  document.addEventListener("keydown", function(e){
+    if(e.key==="ArrowRight") nextSlide();
+    if(e.key==="ArrowLeft") prevSlide();
+  });
+</script>
+
+</body>
+</html>
