@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Plano de Carreira – Coordenação Lake Foundation</title>
+<title>Plano de Carreira – Coordenação (STARS)</title>
 <style>
   :root{
     --orange:#ff6600;
@@ -80,6 +80,7 @@
     align-items:flex-start;
     box-shadow:0 8px 20px rgba(11,11,11,0.06);
     font-size:18px;
+    overflow:auto;
   }
   body[data-theme="dark"] .swot-cell{
     background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
@@ -158,7 +159,8 @@
       heading: 'Situação atual e impacto',
       paragraphs: [
         'A equipe entrega resultados consistentes, mas enfrenta desafios decorrentes de um escopo estratégico grande e complexo que exige coordenação, documentação e transferência de conhecimento mais estruturadas.',
-        'O coordenador precisa equilibrar a manutenção da qualidade das entregas com ações que criem espaço para aprendizado, reduzam riscos operacionais e aumentem a resiliência do time.'
+        'O coordenador precisa equilibrar a manutenção da qualidade das entregas com ações que criem espaço para aprendizado, reduzam riscos operacionais e aumentem a resiliência do time.',
+        'Estabelecer e fortalecer relacionamentos com stakeholders e clientes-chave é essencial para vislumbrar a estratégia correta e entender a mudança necessária; esses relacionamentos permitem priorizar iniciativas e alinhar expectativas.'
       ]
     },
     {
@@ -212,7 +214,7 @@
       subtitle: 'Estratégia de manutenção do sucesso',
       heading: 'Rotação programada de membros e TechLeads',
       paragraphs: [
-        'Para sustentar conhecimento e garantir continuidade de fundação de dados ao reduzir dependência de indivíduos, implementar rotação planejada de team members e TechLeads em ciclos fixos e combinados. Exemplo: ciclos de 6 meses para TechLeads e 3–6 meses para membros de time em funções críticas.',
+        'Para sustentar conhecimento e reduzir dependência de indivíduos, implementar rotação planejada de team members e TechLeads em ciclos fixos e combinados. Exemplo: ciclos de 6 meses para TechLeads e 3–6 meses para membros de time em funções críticas.',
         'Cada rotação é combinada (anunciada com antecedência, com período de overlap para transferência de conhecimento) e inclui checklist de handover, pares de shadowing e tarefas de documentação. Rotação aumenta resiliência, acelera desenvolvimento de liderança e distribui responsabilidade sem perda de qualidade.'
       ]
     },
@@ -222,7 +224,7 @@
       heading: 'Como priorizar sem sobrecarregar',
       paragraphs: [
         'Alinhar metas da equipe com o planejamento estratégico da organização. Revisar dimensionamento e redistribuir tarefas para reduzir picos de demanda causados pelo escopo estratégico grande e complexo.',
-        'Definir metas realistas, priorizar iniciativas de maior impacto e adotar governança leve para aprovar mudanças. Usar gestão democrática para envolver o time nas decisões de priorização.'
+        'Definir metas realistas, priorizar iniciativas de maior impacto e adotar governança leve para aprovar mudanças. Estabelecer relacionamento contínuo com stakeholders e clientes-chave para validar prioridades e garantir visão compartilhada da mudança necessária.'
       ]
     },
     {
@@ -230,7 +232,7 @@
       subtitle: 'Medição e reconhecimento',
       heading: 'Métricas e ciclos de melhoria',
       paragraphs: [
-        'Monitorar indicadores de produtividade (velocidade - Leadtime de Histórias e Features, throughput), qualidade (defeitos, retrabalho), SLAs e métricas de engajamento (NPS interno, turnover).',
+        'Monitorar indicadores de produtividade (throughput), qualidade (defeitos, retrabalho), SLAs e métricas de engajamento (NPS interno, turnover).',
         'Reconhecer resultados positivos publicamente e aplicar ciclos PDCA para temas críticos. Revisões mensais e checkpoints trimestrais para avaliar impacto das ações de capacitação e rotação.'
       ]
     },
@@ -268,30 +270,50 @@
     // Paragraphs (allow HTML)
     const paragraphsHTML = (s.paragraphs || []).map(p => `<p>${p}</p>`).join('');
 
-    // If this slide includes SWOT grid, build it
+    // If this slide includes SWOT grid, build it with the user's content
     let swotHTML = '';
     if (s.swot) {
       swotHTML = `
         <div class="swot-grid" role="grid" aria-label="Matriz SWOT">
           <div class="swot-cell" role="gridcell" aria-label="Forças">
             <div class="swot-letter">S</div>
-            <div class="swot-title">Forças</div>
-            <div class="swot-desc">Liste aqui pontos fortes internos: expertise, processos que funcionam, recursos críticos.</div>
+            <div class="swot-title">Strengths</div>
+            <div class="swot-desc">
+              <ul style="margin:6px 0 0 18px;padding:0;">
+                <li>Competência técnica</li>
+                <li>Fundação de mudanças de plataforma (data lake → data mesh; plataforma AWS ↔ Databricks)</li>
+                <li>Inovação em dados</li>
+              </ul>
+            </div>
           </div>
           <div class="swot-cell" role="gridcell" aria-label="Fraquezas">
             <div class="swot-letter">W</div>
-            <div class="swot-title">Fraquezas</div>
-            <div class="swot-desc">Liste gaps de conhecimento, dependências e áreas que precisam de melhoria.</div>
+            <div class="swot-title">Weaknesses</div>
+            <div class="swot-desc">
+              <ul style="margin:6px 0 0 18px;padding:0;">
+                <li>Somos dependência de muitas áreas da comunidade</li>
+                <li>Baixa capilaridade de capacitação em SWE e Kubernetes, fundamentais para a estratégia da plataforma</li>
+                <li>Capacitação em uso correto de IA (ainda vejo muito Chat/Ask)</li>
+              </ul>
+            </div>
           </div>
           <div class="swot-cell" role="gridcell" aria-label="Oportunidades">
             <div class="swot-letter">O</div>
-            <div class="swot-title">Oportunidades</div>
-            <div class="swot-desc">Automação, capacitação, parcerias e iniciativas que podem ampliar impacto.</div>
+            <div class="swot-title">Opportunities</div>
+            <div class="swot-desc">
+              <ul style="margin:6px 0 0 18px;padding:0;">
+                <li>Uso de IA para contextos complexos</li>
+              </ul>
+            </div>
           </div>
           <div class="swot-cell" role="gridcell" aria-label="Ameaças">
             <div class="swot-letter">T</div>
-            <div class="swot-title">Ameaças</div>
-            <div class="swot-desc">Riscos externos e internos que podem comprometer entregas e continuidade.</div>
+            <div class="swot-title">Threats</div>
+            <div class="swot-desc">
+              <ul style="margin:6px 0 0 18px;padding:0;">
+                <li>Demandas da comunidade para incorporar Databricks sem conhecimento de serviços e features da plataforma</li>
+              </ul>
+            </div>
           </div>
         </div>
       `;
@@ -404,4 +426,3 @@
 </script>
 </body>
 </html>
-
