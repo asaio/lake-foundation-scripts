@@ -7,8 +7,8 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #f0f0f0;
+      background-color: #000; /* black background */
+      color: #fff; /* white text */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -25,7 +25,7 @@
       display: block;
     }
     h1, h2 {
-      color: #00bcd4;
+      color: #ff9800; /* orange accent */
     }
     table {
       width: 100%;
@@ -33,12 +33,12 @@
       margin-top: 20px;
     }
     th, td {
-      border: 1px solid #444;
+      border: 1px solid #ff9800;
       padding: 10px;
     }
     th {
-      background-color: #1e1e1e;
-      color: #00bcd4;
+      background-color: #111;
+      color: #ff9800;
     }
     .navigation {
       position: fixed;
@@ -53,9 +53,9 @@
       text-align: center;
     }
     .ruler span {
-      background-color: #00bcd4;
+      background-color: #ff9800;
       border-radius: 4px;
-      color: #121212;
+      color: #000;
       padding: 8px 14px;
       margin: 0 5px;
       font-size: 14px;
@@ -63,12 +63,162 @@
       display: inline-block;
     }
     .ruler span.active {
-      background-color: #0097a7;
+      background-color: #fff;
+      color: #ff9800;
       font-weight: bold;
     }
     button {
-      background-color: #00bcd4;
+      background-color: #ff9800;
       border: none;
-      color: #121212;
+      color: #000;
       padding: 10px 20px;
-     
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #e68900;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide active">
+    <h1>My Journey</h1>
+    <h2>From Individual Contributor to Junior Engineering Manager</h2>
+    <p>Exploring growth, feedback, and leadership evolution.</p>
+  </div>
+
+  <div class="slide">
+    <h1>Individual Contributor</h1>
+    <p>- Focused on technical excellence and delivery.<br>
+       - Held myself to high standards.<br>
+       - Received feedback: sometimes applied those standards too rigidly to others.</p>
+  </div>
+
+  <div class="slide">
+    <h1>Tech Lead of a Squad</h1>
+    <p>- Applied <strong>situational leadership</strong> to adapt to each engineer.<br>
+       - Mentored two engineers from junior to senior, building confidence and performance.<br>
+       - Supported diverse contributions through one-on-one talks and study plans.<br>
+       - Feedback: supportive, approachable, balanced expectations.</p>
+  </div>
+
+  <div class="slide">
+    <h1>Transition to Junior Engineering Manager</h1>
+    <p>- Guided by <strong>Start With Why</strong>: enabling others to succeed.<br>
+       - Using <strong>First 90 Days STARS framework</strong>.<br>
+       - <em>Sustaining Success</em>: protect consistent delivery record.<br>
+       - <em>Realignment</em>: address low NPS, adopt new technologies, build accountability.<br>
+       - Develop people actively during work hours, provide actionable feedback.</p>
+  </div>
+
+  <div class="slide">
+    <h1>Leadership vs. Management</h1>
+    <table>
+      <tr>
+        <th>Leadership</th>
+        <th>Management</th>
+      </tr>
+      <tr>
+        <td>Inspires vision and purpose</td>
+        <td>Defines processes and strategies</td>
+      </tr>
+      <tr>
+        <td>Focuses on WHY and direction</td>
+        <td>Focuses on HOW and execution</td>
+      </tr>
+      <tr>
+        <td>Motivates and empowers people</td>
+        <td>Ensures accountability and delivery</td>
+      </tr>
+      <tr>
+        <td>Influence without formal authority</td>
+        <td>Formal responsibility for people and outcomes</td>
+      </tr>
+      <tr>
+        <td>Drives change through inspiration</td>
+        <td>Sustains success through structure</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="slide">
+    <h1>Staff Engineer vs. Junior Manager</h1>
+    <table>
+      <tr>
+        <th>Staff Engineer</th>
+        <th>Junior Engineering Manager</th>
+      </tr>
+      <tr>
+        <td>Leads through technical influence</td>
+        <td>Leads through people development</td>
+      </tr>
+      <tr>
+        <td>Defines architecture and technical vision</td>
+        <td>Defines processes and team strategies</td>
+      </tr>
+      <tr>
+        <td>Multiplies impact via systems and code</td>
+        <td>Multiplies impact via individuals and teams</td>
+      </tr>
+      <tr>
+        <td>Focus on depth of expertise</td>
+        <td>Focus on breadth of growth and accountability</td>
+      </tr>
+      <tr>
+        <td>Influence is primarily technical</td>
+        <td>Influence is both technical and organizational</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="slide">
+    <h1>Why Management Made Sense</h1>
+    <p>- I sought to lead through influence but also desired to define processes and strategies.<br>
+       - Mentored engineers from junior to senior, building confidence and performance.<br>
+       - Helped diverse contributors thrive through one-on-one talks and study plans.<br>
+       - With strong delivery but low NPS, realignment was needed.<br>
+       - Management allows me to multiply my role through team and individual development, ensuring accountability and growth.</p>
+  </div>
+
+  <div class="slide">
+    <h1>Conflict Management Skills</h1>
+    <p><strong>Internal:</strong> Investigated concerns of probable sexism, confirmed patterns, coached the individual on active listening and explicit communication, set monthly follow‑ups, and improved team dynamics.</p>
+    <p><strong>External:</strong> Realigned expectations with a supplier rushing us into alpha testing. Clarified our SLOs and negotiated realistic deadlines based on minimal product testing and use‑case knowledge.</p>
+    <p><strong>Cross‑Functional:</strong> Resolved misunderstanding with the cloud foundation team about a supposed security exception. Explained calmly, clarified history, and secured restoration of network capability due to business impact.</p>
+    <p><em>Outcome:</em> Demonstrated impartial investigation, clear communication, and conflict resolution across internal, external, and cross‑functional contexts.</p>
+  </div>
+
+  <div class="slide">
+    <h1>First 90 Days Virtuous Cycles</h1>
+    <p>- <strong>Diagnose the Situation:</strong> Don’t rush to act; understand context and history.<br>
+       - <strong>Establish Relationships:</strong> Build trust with stakeholders, clients, and peers.<br>
+       - <strong>Seek Quick Wins:</strong> Identify achievable goals to gain credibility early.<br>
+       - <strong>Gain Credibility:</strong> Deliver results and show consistency.<br>
+       - <strong>Virtuous Cycle:</strong> Each success builds momentum, reinforcing trust and enabling larger changes.<br>
+       - <strong>Outcome:</strong> Transition smoothly into management, balancing sustaining success with realignment.</p>
+  </div>
+
+  <div class="slide">
+    <h1>Vision Forward</h1>
+    <p>- Multiply impact through people.<br>
+       - Balance high standards with empathy.<br>
+       - Create an environment of growth, accountability, and innovation.<br>
+       - Deliver not just consistently, but with excellence and satisfaction.</p>
+  </div>
+
+  <div class="navigation">
+    <button onclick="prevSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+  </div>
+
+  <div class="ruler">
+    <span onclick="jumpToSlide(0)">Intro</span>
+    <span onclick="jumpToSlide(1)">Contributor</span>
+    <span onclick="jumpToSlide(2)">Tech Lead</span>
+    <span onclick="jumpToSlide(3)">Manager Transition</span>
+    <span onclick="jumpToSlide(4)">Leadership vs Management</span>
+    <span onclick="jumpToSlide(5)">Staff vs Manager</span>
+    <span onclick="jumpToSlide(6)">Why Management</span>
+    <span onclick="
