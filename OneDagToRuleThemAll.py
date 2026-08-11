@@ -5,6 +5,7 @@ import boto3
 import casing
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def format_parameters_for_shape(shape, params):
     """Filter only valid keys from params and adjust casing to match the shape."""
@@ -23,10 +24,9 @@ def format_parameters_for_shape(shape, params):
     return formatted
 
 
-def execute_payload_iterative(payload):
+def execute_payload_iterative(payload, client=None):
     """Iteratively execute payloads, handling multiple nested AssumeRole hops."""
     current_payload = payload
-    client = None
     results = []
 
     while current_payload:
@@ -50,6 +50,7 @@ def execute_payload_iterative(payload):
             response = client._make_api_call(op, formatted_params)
             results.append({op: response})
 
+            # Handle AssumeRole hops
             if service == "sts" and op == "AssumeRole" and "nested" in current_payload:
                 creds = response["Credentials"]
                 nested = current_payload["nested"]
@@ -68,22 +69,36 @@ def execute_payload_iterative(payload):
     return results
 
 
+def process_account(account_id, payload):
+    """Wrapper to execute payload for a single account."""
+    return account_id, execute_payload_iterative(payload)
+
+
 def aws_low_level_runner(file_name: str, **context):
     """
-    Load JSON payload from MWAA input directory and execute.
+    Load JSON payload from MWAA input directory and execute for each account ID concurrently.
     """
-    # MWAA typically mounts S3 paths into /usr/local/airflow/dags or a configured input dir
     input_dir = os.environ.get("MWAA_INPUT_DIR", "/usr/local/airflow/dags/input")
     file_path = os.path.join(input_dir, file_name)
 
     with open(file_path, "r") as f:
-        payload = json.load(f)
+        accounts_payload = json.load(f)
 
-    return execute_payload_iterative(payload)
+    all_results = {}
+    # Use ThreadPoolExecutor to process accounts concurrently
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {executor.submit(process_account, acc_id, payload): acc_id
+                   for acc_id, payload in accounts_payload.items()}
+
+        for future in as_completed(futures):
+            acc_id, result = future.result()
+            all_results[acc_id] = result
+
+    return all_results
 
 
 with DAG(
-    dag_id="aws_low_level_file_input_dag",
+    dag_id="aws_low_level_multi_account_concurrent_dag",
     start_date=datetime(2024, 1, 1),
     schedule_interval=None,
     catchup=False,
@@ -93,8 +108,7 @@ with DAG(
         task_id="run_aws_ops",
         python_callable=aws_low_level_runner,
         op_kwargs={
-            # Pass the filename of the JSON you’ve uploaded to MWAA’s input directory
-            "file_name": "payload.json"
+            "file_name": "multi_account_payload.json"
         },
     )
 
