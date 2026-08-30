@@ -1,0 +1,84 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="AWS Data Mesh Topology" id="aws-data-mesh">
+    <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Consumer Accounts -->
+        <mxCell id="consumer1" value="Consumer Account A" style="shape=mxgraph.aws.general.user;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="100" y="400" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="consumer1Glue" value="Glue Catalog" style="shape=mxgraph.aws.analytics.glue;" vertex="1" parent="1">
+          <mxGeometry x="100" y="470" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="consumer1Lake" value="Lake Formation" style="shape=mxgraph.aws.security_identity_compliance.lake_formation;" vertex="1" parent="1">
+          <mxGeometry x="190" y="470" width="80" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="consumer2" value="Consumer Account B" style="shape=mxgraph.aws.general.user;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="100" y="550" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="consumer2Glue" value="Glue Catalog" style="shape=mxgraph.aws.analytics.glue;" vertex="1" parent="1">
+          <mxGeometry x="100" y="620" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="consumer2Lake" value="Lake Formation" style="shape=mxgraph.aws.security_identity_compliance.lake_formation;" vertex="1" parent="1">
+          <mxGeometry x="190" y="620" width="80" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Producer Accounts -->
+        <mxCell id="producer1" value="Producer Account A" style="shape=mxgraph.aws.general.user;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="400" y="400" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="producer1Glue" value="Glue Catalog" style="shape=mxgraph.aws.analytics.glue;" vertex="1" parent="1">
+          <mxGeometry x="400" y="470" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="producer1Lake" value="Lake Formation" style="shape=mxgraph.aws.security_identity_compliance.lake_formation;" vertex="1" parent="1">
+          <mxGeometry x="490" y="470" width="80" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="producer2" value="Producer Account B" style="shape=mxgraph.aws.general.user;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="400" y="550" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="producer2Glue" value="Glue Catalog" style="shape=mxgraph.aws.analytics.glue;" vertex="1" parent="1">
+          <mxGeometry x="400" y="620" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="producer2Lake" value="Lake Formation" style="shape=mxgraph.aws.security_identity_compliance.lake_formation;" vertex="1" parent="1">
+          <mxGeometry x="490" y="620" width="80" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Control Accounts -->
+        <mxCell id="controlGlue" value="Control Glue Catalogs (Legacy, Consumer, Producer, CDP)" style="shape=mxgraph.aws.analytics.glue;" vertex="1" parent="1">
+          <mxGeometry x="700" y="470" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="controlLake" value="Control Lake Formation" style="shape=mxgraph.aws.security_identity_compliance.lake_formation;" vertex="1" parent="1">
+          <mxGeometry x="700" y="540" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- RAM -->
+        <mxCell id="ram" value="AWS Resource Access Manager" style="shape=mxgraph.aws.management.resource_access_manager;" vertex="1" parent="1">
+          <mxGeometry x="700" y="620" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Connections -->
+        <!-- Resource links from consumer/producer Glue to control Glue -->
+        <mxCell id="edgeConsumer1Glue" style="dashed=1;endArrow=block;" edge="1" parent="1" source="consumer1Glue" target="controlGlue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeConsumer2Glue" style="dashed=1;endArrow=block;" edge="1" parent="1" source="consumer2Glue" target="controlGlue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeProducer1Glue" style="dashed=1;endArrow=block;" edge="1" parent="1" source="producer1Glue" target="controlGlue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeProducer2Glue" style="dashed=1;endArrow=block;" edge="1" parent="1" source="producer2Glue" target="controlGlue"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- RAM connections -->
+        <mxCell id="edgeRAMConsumer1" style="endArrow=block;" edge="1" parent="1" source="ram" target="consumer1Glue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeRAMConsumer2" style="endArrow=block;" edge="1" parent="1" source="ram" target="consumer2Glue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeRAMProducer1" style="endArrow=block;" edge="1" parent="1" source="ram" target="producer1Glue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeRAMProducer2" style="endArrow=block;" edge="1" parent="1" source="ram" target="producer2Glue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeRAMControl" style="endArrow=block;" edge="1" parent="1" source="ram" target="controlGlue"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Data consumption arrows -->
+        <!-- Consumers can read from other consumers -->
+        <mxCell id="edgeConsumer1toConsumer2" style="endArrow=block;strokeColor=#82b366;" edge="1" parent="1" source="consumer1Lake" target="consumer2Lake"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="edgeConsumer2toConsumer1" style="endArrow=block;strokeColor=#82b366;" edge="1" parent="1" source="consumer2Lake" target="consumer1Lake"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Consumers can read from producers -->
+        <mxCell id="edgeConsumer1toProducer1" style="endArrow=block;strokeColor=#82b366;" edge="1" parent="1" source="consumer1Lake" target="producer1Lake"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell
